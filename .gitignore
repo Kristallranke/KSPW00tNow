@@ -1,0 +1,12 @@
+**/.vs
+**/Debug
+**/Release
+**/Doku
+discord_game_sdk
+pluginsdk
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.ipch
+Thumbs.db

@@ -1,6 +1,6 @@
 # KSPW00tNow
-This repo contains a plugin for Kerbal Space Program which overrides
-the default controls to use the analog values from the Wooting keyboards.
+This repo contains a plugin for Kerbal Space Program which adds support for Wooting Keyboards (e.g. Wooting One/Two).
+This plugin reads the analog values from the keyboard and applies it on the flight controls.
 
 ## Build
 1. Update the assembly references according to the [Wiki page](https://wiki.kerbalspaceprogram.com/wiki/Setting_up_Visual_Studio) of Kerbal Space Program 
@@ -8,9 +8,11 @@ the default controls to use the analog values from the Wooting keyboards.
 3. Build the solution
 
 ## Installation
-Copy the files following files:
-KSPW00tNow\bin\Release\KSPW00tNow.dll
-KSPW00tNow\bin\Release\wooting_analog_wrapper.dll
+Copy the content of package\GameData to the GameData directory of the Kerbal Space Program install folder.
+
+The file structure should look as following:\
+GameData\KSPW00tNow\Plugins\KSPW00tNow.dll
+GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.dll
 
 ## Usage
-The plugin binds to the _default_ keybindings.
+The plugin automatically binds to the primary keybindings. No manual setup is required.

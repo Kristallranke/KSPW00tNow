@@ -60,12 +60,16 @@
     <Compile Include="Wooting Analog SDK\WootingAnalogSDK.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Wooting Analog SDK\wooting_analog_wrapper.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Wooting Analog SDK\wooting_analog_wrapper.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>robocopy . "$(SolutionDir)\package\GameData\KSPW00tNow\Plugins" KSPW00tNow.dll /nfl /njs /njh
+robocopy "$(ProjectDir)\Wooting Analog SDK" "$(SolutionDir)\package\GameData\KSPW00tNow\Plugins" wooting_analog_wrapper.dll /nfl /njs /njh
+echo.</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -15,12 +15,16 @@ namespace KSPW00tNow
 		float[] oldKeystates;
 		FlightCtrlState lastCtrlState;
 
-		void Log(String name, String message = "")
-		{
-			UnityEngine.Debug.Log($"[KSPW00tNow] {name}: {message}");
-		}
-
 		static bool wootInit = false;
+
+		private void Log(String name, String message = "")
+		{
+			if (message == "") {
+				UnityEngine.Debug.Log($"[KSPW00tNow] {name}");
+			} else {
+				UnityEngine.Debug.Log($"[KSPW00tNow] {name}: {message}");
+			}
+		}
 
 		void Awake()
 		{
@@ -35,18 +39,16 @@ namespace KSPW00tNow
 				wootInit = true;
 				WootingAnalogSDKNET.WootingAnalogSDK.Initialise();
 			}
-			//			WootingAnalogSDKNET.WootingAnalogSDK.DeviceEvent += DeviceEventHandler;
 		}
 
 		IEnumerator Start()
 		{
-			Log("Start");
-			yield return new UnityEngine.WaitForSeconds(2.5f);
+			yield break;
 		}
+
 		void OnDestroy()
 		{
 			FlightInputHandler.OnRawAxisInput -= ControlUpdate;
-			//			WootingAnalogSDKNET.WootingAnalogSDK.DeviceEvent -= DeviceEventHandler;
 			//WootingAnalogSDKNET.WootingAnalogSDK.UnInitialise();
 			Log("OnDestroy");
 		}
@@ -62,18 +64,15 @@ namespace KSPW00tNow
 
 		void OnDisable()
 		{
-//			FlightInputHandler.OnRawAxisInput -= ControlUpdate;
-//			WootingAnalogSDKNET.WootingAnalogSDK.DeviceEvent -= DeviceEventHandler;
-//			WootingAnalogSDKNET.WootingAnalogSDK.UnInitialise();
 			Log("OnDisable");
 		}
 
-		float Clamp(float value)
+		float Clamp(float value, float min, float max)
 		{
-			return Math.Min(1.0f, Math.Max(value, -1.0f));
+			return Math.Min(max, Math.Max(min, value));
 		}
 
-		void ControlUpdate(FlightCtrlState state)
+		public void ControlUpdate(FlightCtrlState state)
 		{
 			float pitch = 0.0f;
 			float roll = 0.0f;
@@ -84,6 +83,9 @@ namespace KSPW00tNow
 			float transY = 0.0f;
 			float transZ = 0.0f;
 
+			float steer = 0.0f;
+			float drive = 0.0f;
+
 			var (keys, readErr) = WootingAnalogSDKNET.WootingAnalogSDK.ReadFullBuffer(20);
 			if (readErr == WootingAnalogSDKNET.WootingAnalogResult.Ok) {
 				if (keys.Count == 0) {
@@ -91,37 +93,17 @@ namespace KSPW00tNow
                 } else {
 					foreach (var analog in keys)
 					{
-						HidKey key = (HidKey)analog.Item1;
-						if (key == HidKey.W) {
-							pitch -= analog.Item2;
-						} else if (key == HidKey.S) {
-							pitch += analog.Item2;
-						} else if (key == HidKey.Q) {
-							roll -= analog.Item2;
-						} else if (key == HidKey.E) {
-							roll += analog.Item2;
-						} else if (key == HidKey.A) {
-							yaw -= analog.Item2;
-						} else if (key == HidKey.D) {
-							yaw += analog.Item2;
-						} else if (key == HidKey.N) {
-							transZ -= analog.Item2;
-						} else if (key == HidKey.H) {
-							transZ += analog.Item2;
-						} else if (key == HidKey.I) {
-							transY -= analog.Item2;
-						} else if (key == HidKey.K) {
-							transY += analog.Item2;
-						} else if (key == HidKey.J) {
-							transX -= analog.Item2;
-						} else if (key == HidKey.L) {
-							transX += analog.Item2;
-						} else if (key == HidKey.RCtrl) {
-							throttle -= analog.Item2;
-						} else if(key == HidKey.RShift) {
-							throttle += analog.Item2;
-						}
-						Log("ControlUpdate", $"({analog.Item1},{analog.Item2})");
+						Key key = new Key((HidKey)analog.Item1);
+						float value = analog.Item2;
+						PrepareAxis(ref pitch, GameSettings.PITCH_DOWN, GameSettings.PITCH_UP, key, value);
+						PrepareAxis(ref roll, GameSettings.ROLL_LEFT, GameSettings.ROLL_RIGHT, key, value);
+						PrepareAxis(ref yaw, GameSettings.YAW_LEFT, GameSettings.YAW_RIGHT, key, value);
+						PrepareAxis(ref steer, GameSettings.WHEEL_STEER_LEFT, GameSettings.WHEEL_STEER_RIGHT, key, value);
+						PrepareAxis(ref transZ, GameSettings.TRANSLATE_BACK, GameSettings.TRANSLATE_FWD, key, value);
+						PrepareAxis(ref transY, GameSettings.TRANSLATE_DOWN, GameSettings.PITCH_UP, key, value);
+						PrepareAxis(ref transX, GameSettings.TRANSLATE_LEFT, GameSettings.TRANSLATE_RIGHT, key, value);
+						PrepareAxis(ref throttle, GameSettings.THROTTLE_DOWN, GameSettings.THROTTLE_UP, key, value);
+						PrepareAxis(ref drive, GameSettings.WHEEL_THROTTLE_DOWN, GameSettings.WHEEL_THROTTLE_UP, key, value);
 					}
 				}
 			} else {
@@ -130,43 +112,47 @@ namespace KSPW00tNow
 					Log("ControlUpdate", $"Wooting Error code ({readErr})");
 				}
 			}
-			if (pitch != 0) {
-				state.pitch = pitch;
-				Log("ControlUpdate", $"Pitch {pitch})");
-			}
-			if (roll != 0) {
-				state.roll = roll;
-				Log("ControlUpdate", $"Pitch {roll})");
-			}
-			if (yaw != 0) {
-				state.yaw = yaw;
-				state.wheelSteer = yaw;
-				Log("ControlUpdate", $"Pitch {yaw})");
-			}
-			if (transX != 0) {
-				state.X = transX;
-				Log("ControlUpdate", $"Pitch {transX})");
-			}
-			if (transY != 0) {
-				state.Y = transY;
-				Log("ControlUpdate", $"Pitch {transY})");
-			}
-			if (transZ != 0) {
-				state.Z = transZ;
-				Log("ControlUpdate", $"Pitch {transZ})");
-			}
-			if (throttle != 0) {
-				state.mainThrottle = Clamp(lastCtrlState.mainThrottle + throttle/32.0f);
-				state.wheelThrottle = Clamp(lastCtrlState.wheelThrottle + throttle/32.0f);
-				Log("ControlUpdate", $"Pitch {throttle})");
-			}
+
+			ApplyAxis(ref state.pitch, pitch, "Pitch");
+			ApplyAxis(ref state.roll, roll, "Roll");
+			ApplyAxis(ref state.yaw, yaw, "Yaw");
+			ApplyAxis(ref state.wheelSteer, steer, "Steer");
+			ApplyAxis(ref state.X, transX, "TransX");
+			ApplyAxis(ref state.Y, transY, "TransY");
+			ApplyAxis(ref state.Z, transZ, "TransZ");
+			ApplyThrottleAxis(ref state.mainThrottle, throttle, "Throttle");
+			ApplyThrottleAxis(ref state.wheelThrottle, drive, "Drive");
+
 			lastCtrlState = state;
 		}
 
-		void DeviceEventHandler(WootingAnalogSDKNET.DeviceEventType eventType, WootingAnalogSDKNET.DeviceInfo deviceInfo)
+		private bool PrepareAxis(ref float axis, KeyBinding negative, KeyBinding positive, Key key, float value)
 		{
-			if (eventType == WootingAnalogSDKNET.DeviceEventType.Connected) {
+			if (key == negative.primary) {
+				axis -= value;
+			} else if (key == positive.primary) {
+				axis += value;
 			} else {
+				return false;
+			}
+			return true;
+		}
+
+		private void ApplyAxis(ref float output, float value, String text)
+		{
+			if (value != 0)
+			{
+				output = value;
+				Log("ControlUpdate", $"{text} {value})");
+			}
+		}
+
+		private void ApplyThrottleAxis(ref float output, float value, String text)
+		{
+			if (value != 0)
+			{
+				output = Clamp(output + value/32.0f, -1.0f, 1.0f);
+				Log("ControlUpdate", $"{text} {value})");
 			}
 		}
 	}

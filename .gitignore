@@ -2,6 +2,7 @@
 **/Debug
 **/Release
 **/Doku
+package
 discord_game_sdk
 pluginsdk
 *.suo

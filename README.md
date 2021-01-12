@@ -11,7 +11,7 @@ This plugin reads the analog values from the keyboard and applies it on the flig
 Copy the content of package\GameData to the GameData directory of the Kerbal Space Program install folder.
 
 The file structure should look as following:\
-GameData\KSPW00tNow\Plugins\KSPW00tNow.dll
+GameData\KSPW00tNow\Plugins\KSPW00tNow.dll\
 GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.dll
 
 ## Usage

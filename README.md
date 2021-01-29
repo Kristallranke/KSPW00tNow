@@ -1,6 +1,17 @@
 # KSPW00tNow
-This repo contains a plugin for Kerbal Space Program which adds support for Wooting Keyboards (e.g. Wooting One/Two).
-This plugin reads the analog values from the keyboard and applies it on the flight controls.
+This repo contains a plugin for Kerbal Space Program which adds support for Wooting keyboards (e.g. Wooting One/Two).
+This plugin reads the analog values from the keyboard and applies those instead of the binary controls.
+
+## Features
+- Automatically binds to the primary keybindings
+- Flight controls (rotate, translate, thrust)
+- SAS override
+- EVA: variable ladder climb speed
+- EVA: variable walk and run speed (CameraFrameMode* on)
+- EVA: 360° movement (CameraFrameMode* off)
+- EVA: jetpack and parachute control
+
+*) CameraFrameMode means whether the Kerbal faces the camera direction or the movement direction. Per default this can be toggled with the Alt key.
 
 ## Build
 1. Update the assembly references according to the [Wiki page](https://wiki.kerbalspaceprogram.com/wiki/Setting_up_Visual_Studio) of Kerbal Space Program 
@@ -11,8 +22,9 @@ This plugin reads the analog values from the keyboard and applies it on the flig
 Copy the content of package\GameData to the GameData directory of the Kerbal Space Program install folder.
 
 The file structure should look as following:\
-GameData\KSPW00tNow\Plugins\KSPW00tNow.dll\
-GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.dll
+\<KSPRootDir\>\GameData\KSPW00tNow\Plugins\0Harmony.dll\
+\<KSPRootDir\>\GameData\KSPW00tNow\Plugins\KSPW00tNow.dll\
+\<KSPRootDir\>\GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.dll
 
 ## Usage
-The plugin automatically binds to the primary keybindings. No manual setup is required.
+No manual setup is required.

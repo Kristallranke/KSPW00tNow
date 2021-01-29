@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.0.4\lib\net472\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>G:\Spiele\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -55,21 +58,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FlightControl.cs" />
+    <Compile Include="ControlManager.cs" />
     <Compile Include="HidKey.cs" />
+    <Compile Include="KerbalEVA.cs" />
+    <Compile Include="LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VehicleSAS.cs" />
     <Compile Include="Wooting Analog SDK\WootingAnalogSDK.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Wooting Analog SDK\wooting_analog_wrapper.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(OutDir)KSPW00tNow.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(OutDir)0Harmony.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(ProjectDir)Wooting Analog SDK\wooting_analog_wrapper.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+  </Target>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>robocopy . "$(SolutionDir)\package\GameData\KSPW00tNow\Plugins" KSPW00tNow.dll /nfl /njs /njh
-robocopy "$(ProjectDir)\Wooting Analog SDK" "$(SolutionDir)\package\GameData\KSPW00tNow\Plugins" wooting_analog_wrapper.dll /nfl /njs /njh
-echo.</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

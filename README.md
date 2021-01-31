@@ -19,7 +19,7 @@ This plugin reads the analog values from the keyboard and applies those instead 
 3. Build the solution
 
 ## Installation
-Copy the content of package\GameData to the GameData directory of the Kerbal Space Program install folder.
+Extract the contents of package\KSPW00tNow.zip into the GameData directory of the Kerbal Space Program install folder.
 
 The file structure should look as following:\
 \<KSPRootDir\>\GameData\KSPW00tNow\Plugins\0Harmony.dll\

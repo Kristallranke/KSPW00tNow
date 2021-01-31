@@ -38,9 +38,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>G:\Spiele\Steam\SteamApps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -74,9 +71,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(OutDir)KSPW00tNow.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
-    <Copy SourceFiles="$(OutDir)0Harmony.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
-    <Copy SourceFiles="$(ProjectDir)Wooting Analog SDK\wooting_analog_wrapper.dll" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(OutDir)KSPW00tNow.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(OutDir)0Harmony.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(ProjectDir)Wooting Analog SDK\wooting_analog_wrapper.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <ZipDirectory DestinationFile="$(SolutionDir)package\KSPW00tNow.zip" Overwrite="true" SourceDirectory="$(SolutionDir)package\GameData" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>

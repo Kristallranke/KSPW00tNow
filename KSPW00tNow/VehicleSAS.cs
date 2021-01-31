@@ -13,8 +13,7 @@ namespace KSPW00tNow
 	{
 		static bool Prefix(VesselAutopilot.VesselSAS __instance, Vessel ___vessel, ref bool __result)
 		{
-			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.pitch != 0.0f)
-			{
+			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.pitch != 0.0f) {
 				__result = true;
 				return false;
 			}
@@ -29,8 +28,7 @@ namespace KSPW00tNow
 	{
 		static bool Prefix(VesselAutopilot.VesselSAS __instance, Vessel ___vessel, ref bool __result)
 		{
-			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.yaw != 0.0f)
-			{
+			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.yaw != 0.0f) {
 				__result = true;
 				return false;
 			}
@@ -45,8 +43,7 @@ namespace KSPW00tNow
 	{
 		static bool Prefix(VesselAutopilot.VesselSAS __instance, Vessel ___vessel, ref bool __result)
 		{
-			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.roll != 0.0f)
-			{
+			if (___vessel.isActiveAndEnabled && ControlManager.GetInstance().flightState.roll != 0.0f) {
 				__result = true;
 				return false;
 			}
@@ -59,8 +56,7 @@ namespace KSPW00tNow
 	[HarmonyPatch("ControlUpdate")]
 	class VesselAutopilot_VesselSAS_ControlUpdate
 	{
-		static void Postfix(FlightCtrlState s, VesselAutopilot.VesselSAS __instance, Vessel ___vessel)
-		{
+		static void Postfix(FlightCtrlState s, VesselAutopilot.VesselSAS __instance, Vessel ___vessel) {
 		}
 	}
 }

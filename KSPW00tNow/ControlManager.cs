@@ -38,6 +38,8 @@ namespace KSPW00tNow
 		public KerbalCtrlState kerbalState;
 		public SasControlMode sasControlMode;
 
+		private static ControlManager instance = null;
+
 		public static ControlManager GetInstance()
 		{
 			if (instance == null) {
@@ -83,23 +85,14 @@ namespace KSPW00tNow
 					PrepareAxis(ref kerbalState.packZ, GameSettings.EVA_Pack_back, GameSettings.EVA_Pack_forward, key, value);
 					PrepareAxis(ref kerbalState.packY, GameSettings.EVA_Pack_down, GameSettings.EVA_Pack_up, key, value);
 					PrepareAxis(ref kerbalState.packX, GameSettings.EVA_Pack_left, GameSettings.EVA_Pack_right, key, value);
-
-					if (analog.Item1 == (short)HidKey.Alpha0) {
-						error = true;
-						DumpTypeInfo(typeof(VesselAutopilot.VesselSAS));
-						DumpTypeInfo(typeof(FlightEVA));
-						DumpTypeInfo(typeof(KerbalEVA));
-					}
 				}
 			} else {
 				if (!error) {
 					error = true;
-					LogManager.Log("GlobalControlState", $"Wooting Error code ({readErr})");
+					LogManager.Error("GlobalControlState", $"Wooting Error code ({readErr})");
 				}
 			}
 		}
-
-		private static ControlManager instance = null;
 
 		private bool PrepareAxis(ref float axis, KeyBinding negative, KeyBinding positive, Key key, float value)
 		{
@@ -116,30 +109,24 @@ namespace KSPW00tNow
 		private void DumpTypeInfo(System.Type type)
 		{
 			using (System.IO.FileStream stream = new System.IO.FileStream($"C:\\Users\\Kristallranke\\Desktop\\Kerbal_{ type.Name }.log", System.IO.FileMode.Create)) {
-				using (System.IO.StreamWriter writer = new System.IO.StreamWriter(stream))
-				{
+				using (System.IO.StreamWriter writer = new System.IO.StreamWriter(stream)) {
 					LogManager.Log(writer, "DumpTypeInfo", $"class {type.Name} " + "{");
-					foreach (System.Reflection.MethodInfo m in type.GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic))
-					{
+					foreach (System.Reflection.MethodInfo m in type.GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)) {
 						String parameters = "";
-						foreach (var p in m.GetParameters())
-						{
+						foreach (var p in m.GetParameters()) {
 							parameters += p.ParameterType.Name + " " + p.Name + ", ";
 						}
-						if (parameters.Length > 2)
-						{
+						if (parameters.Length > 2) {
 							parameters = parameters.Substring(0, parameters.Length - 2);
 						}
 						String str = "method " + m.ReturnType.Name + " " + m.Name + "(" + parameters + ");";
 						LogManager.Log(writer, "DumpTypeInfo", str);
 					}
-					foreach (var m in type.GetEvents(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic))
-					{
+					foreach (var m in type.GetEvents(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)) {
 						String str = $"event {m.EventHandlerType.Name} {m.Name};";
 						LogManager.Log(writer, "DumpTypeInfo", str);
 					}
-					foreach (var f in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic))
-					{
+					foreach (var f in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)) {
 						String str = $"{f.FieldType.Name} {f.Name};";
 						LogManager.Log(writer, "DumpTypeInfo", str);
 					}

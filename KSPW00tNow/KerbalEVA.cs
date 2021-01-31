@@ -16,7 +16,7 @@ namespace KSPW00tNow
 		static void Postfix(KerbalEVA __instance, ref Single ___tgtBoundStep, ref Vector3 ___tgtRpos, ref Vector3 ___packTgtRPos, ref Vector3 ___ladderTgtRPos, ref Single ___tgtSpeed, ref Single ___lastTgtSpeed,
 							ref Quaternion ___rd_tgtRot, ref Vector3 ___tgtFwd, ref Vector3 ___tgtUp, ref Vector3 ___cmdRot, ref Vector3 ___cmdDir, ref Vector3 ___parachuteInput, ref bool ___manualAxisControl)
 		{
-			if (!__instance.vessel.isActiveVessel || __instance.vessel.packed) {
+			if (!__instance.vessel.isActiveAndEnabled) {
 				return;
 			}
 
@@ -27,15 +27,13 @@ namespace KSPW00tNow
 			bool faceCamera = __instance.CharacterFrameMode;
 			Transform transform = __instance.transform;
 
-			LogManager.Log("HandleMovementInput", $"-------------------------");
-			LogMovementData(__instance, ___tgtBoundStep, ___tgtRpos, ___packTgtRPos, ___ladderTgtRPos, ___tgtSpeed, ___lastTgtSpeed, ___rd_tgtRot, ___tgtFwd, ___tgtUp, ___cmdRot, ___cmdDir, ___parachuteInput, ___manualAxisControl);
+			LogMovementData(true, __instance, ___tgtBoundStep, ___tgtRpos, ___packTgtRPos, ___ladderTgtRPos, ___tgtSpeed, ___lastTgtSpeed, ___rd_tgtRot, ___tgtFwd, ___tgtUp, ___cmdRot, ___cmdDir, ___parachuteInput, ___manualAxisControl);
 
 			if (newState.forward != 0 || newState.sideway != 0) {
 				float upscale = 1.0f / Math.Max(Math.Abs(newState.forward), Math.Abs(newState.sideway));
 				float scale = (float)(1.0 / Math.Sqrt(Math.Pow(newState.forward * upscale, 2.0f) + Math.Pow(newState.sideway * upscale, 2.0f)));
 
-				if (faceCamera)
-				{
+				if (faceCamera) {
 					___tgtRpos = transform.forward * newState.forward * scale;
 					___tgtRpos += transform.right * newState.sideway * scale;
 					___tgtFwd = __instance.fFwd;
@@ -66,24 +64,25 @@ namespace KSPW00tNow
 				___parachuteInput.y = newState.sideway;
 			}
 
-			LogManager.Log("HandleMovementInput", $"-----------");
-			LogMovementData(__instance, ___tgtBoundStep, ___tgtRpos, ___packTgtRPos, ___ladderTgtRPos, ___tgtSpeed, ___lastTgtSpeed, ___rd_tgtRot, ___tgtFwd, ___tgtUp, ___cmdRot, ___cmdDir, ___parachuteInput, ___manualAxisControl);
+			LogMovementData(false, __instance, ___tgtBoundStep, ___tgtRpos, ___packTgtRPos, ___ladderTgtRPos, ___tgtSpeed, ___lastTgtSpeed, ___rd_tgtRot, ___tgtFwd, ___tgtUp, ___cmdRot, ___cmdDir, ___parachuteInput, ___manualAxisControl);
 		}
 
-		static void LogMovementData(KerbalEVA __instance, float ___tgtBoundStep, Vector3 ___tgtRpos, Vector3 ___packTgtRPos, Vector3 ___ladderTgtRPos, float ___tgtSpeed, float ___lastTgtSpeed, Quaternion ___rd_tgtRot, Vector3 ___tgtFwd, Vector3 ___tgtUp, Vector3 ___cmdRot, Vector3 ___cmdDir, Vector3 ___parachuteInput, bool ___manualAxisControl)
+		[System.Diagnostics.Conditional("DEBUG")]
+		static void LogMovementData(bool first, KerbalEVA __instance, float ___tgtBoundStep, Vector3 ___tgtRpos, Vector3 ___packTgtRPos, Vector3 ___ladderTgtRPos, float ___tgtSpeed, float ___lastTgtSpeed, Quaternion ___rd_tgtRot, Vector3 ___tgtFwd, Vector3 ___tgtUp, Vector3 ___cmdRot, Vector3 ___cmdDir, Vector3 ___parachuteInput, bool ___manualAxisControl)
 		{
-			LogManager.Log("HandleMovementInput", $"CharacterFrameMode {__instance.CharacterFrameMode}");
-			LogManager.Log("HandleMovementInput", $"tgtBoundStep {___tgtBoundStep}");
-			LogManager.Log("HandleMovementInput", $"tgtRpos {___tgtRpos}");
-			LogManager.Log("HandleMovementInput", $"packTgtRPos {___packTgtRPos}");
-			LogManager.Log("HandleMovementInput", $"ladderTgtRPos {___ladderTgtRPos}");
-			LogManager.Log("HandleMovementInput", $"tgtSpeed {___tgtSpeed}");
-			LogManager.Log("HandleMovementInput", $"lastTgtSpeed {___lastTgtSpeed}");
-			LogManager.Log("HandleMovementInput", $"rd_tgtRot {___rd_tgtRot}");
-			LogManager.Log("HandleMovementInput", $"tgtFwd {___tgtFwd}");
-			LogManager.Log("HandleMovementInput", $"tgtUp {___tgtUp}");
-			LogManager.Log("HandleMovementInput", $"parachuteInput {___parachuteInput}");
-			LogManager.Log("HandleMovementInput", $"manualAxisControl {___manualAxisControl}");
+			LogManager.Debug("HandleMovementInput", first ? "-------------------------" : "-----------");
+			LogManager.Debug("HandleMovementInput", $"CharacterFrameMode {__instance.CharacterFrameMode}");
+			LogManager.Debug("HandleMovementInput", $"tgtBoundStep {___tgtBoundStep}");
+			LogManager.Debug("HandleMovementInput", $"tgtRpos {___tgtRpos}");
+			LogManager.Debug("HandleMovementInput", $"packTgtRPos {___packTgtRPos}");
+			LogManager.Debug("HandleMovementInput", $"ladderTgtRPos {___ladderTgtRPos}");
+			LogManager.Debug("HandleMovementInput", $"tgtSpeed {___tgtSpeed}");
+			LogManager.Debug("HandleMovementInput", $"lastTgtSpeed {___lastTgtSpeed}");
+			LogManager.Debug("HandleMovementInput", $"rd_tgtRot {___rd_tgtRot}");
+			LogManager.Debug("HandleMovementInput", $"tgtFwd {___tgtFwd}");
+			LogManager.Debug("HandleMovementInput", $"tgtUp {___tgtUp}");
+			LogManager.Debug("HandleMovementInput", $"parachuteInput {___parachuteInput}");
+			LogManager.Debug("HandleMovementInput", $"manualAxisControl {___manualAxisControl}");
 			//			LogManager.Log("HandleMovementInput", $"|cmdRot {___cmdRot}");
 			//			LogManager.Log("HandleMovementInput", $"|cmdDir {___cmdDir}");
 		}

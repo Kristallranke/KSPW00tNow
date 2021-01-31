@@ -16,19 +16,28 @@ namespace KSPW00tNow
 
 		public static bool init = false;
 
+		[System.Diagnostics.Conditional("DEBUG")]
+		void EnableLogging()
+		{
+			LogManager.LevelDebug = true;
+		}
+
 		void Awake()
 		{
-			LogManager.Log("Awake");
+			if (!init) {
+				init = true;
+				EnableLogging();
+				LogManager.Debug("Awake");
+				var harmony = new HarmonyLib.Harmony("KSPW00tNow");
+				harmony.PatchAll();
+			} else {
+				LogManager.Debug("Awake");
+			}
 
 			oldKeystates = new float[256];
 			lastCtrlState = null;
 
 			FlightInputHandler.OnRawAxisInput += ControlUpdate;
-			if (!init) {
-				init = true;
-				var harmony = new HarmonyLib.Harmony("KSPW00tNow");
-				harmony.PatchAll();
-			}
 		}
 
 		IEnumerator Start()
@@ -38,8 +47,8 @@ namespace KSPW00tNow
 
 		void OnDestroy()
 		{
+			LogManager.Debug("OnDestroy");
 			FlightInputHandler.OnRawAxisInput -= ControlUpdate;
-			LogManager.Log("OnDestroy");
 		}
 
 		void Update()
@@ -48,12 +57,12 @@ namespace KSPW00tNow
 
 		void OnEnable()
 		{
-			LogManager.Log("OnEnable");
+			LogManager.Debug("OnEnable");
 		}
 
 		void OnDisable()
 		{
-			LogManager.Log("OnDisable");
+			LogManager.Debug("OnDisable");
 		}
 
 		float Clamp(float value, float min, float max)
@@ -85,7 +94,7 @@ namespace KSPW00tNow
 			if (value != 0)
 			{
 				output = value;
-				LogManager.Log("ControlUpdate", $"{text} {value})");
+				LogManager.Debug("ControlUpdate", $"{text} {value})");
 			}
 		}
 
@@ -94,7 +103,7 @@ namespace KSPW00tNow
 			if (value != 0)
 			{
 				output = Clamp(output + value/32.0f, -1.0f, 1.0f);
-				LogManager.Log("ControlUpdate", $"{text} {value})");
+				LogManager.Debug("ControlUpdate", $"{text} {value})");
 			}
 		}
 	}

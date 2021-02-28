@@ -38,6 +38,28 @@ namespace KSPW00tNow
 			lastCtrlState = null;
 
 			FlightInputHandler.OnRawAxisInput += ControlUpdate;
+			GameEvents.onInputLocksModified.Add(OnInputLocksModified);
+		}
+
+		void PrintControlLock(ControlTypes lockMask)
+		{
+			string msg = "Locks changed: ";
+			string replaceString = "STAGE_IN_MAP_CONTROLS,";
+			for (ulong i = 1; i != 0; i = i << 1) {
+				if (((ulong)lockMask & i) != 0) {
+					string names = ((ControlTypes)i).ToString();
+					msg = msg + names.Replace(replaceString, "") + "|";
+				}
+			}
+			LogManager.Debug("OnInputLocksModified", msg);
+		}
+
+		void OnInputLocksModified(GameEvents.FromToAction<ControlTypes, ControlTypes> fromTo)
+		{
+			ControlManager manager = ControlManager.GetInstance();
+			manager.lockMask = fromTo.to;
+
+			PrintControlLock(fromTo.to);
 		}
 
 		IEnumerator Start()
@@ -48,6 +70,7 @@ namespace KSPW00tNow
 		void OnDestroy()
 		{
 			LogManager.Debug("OnDestroy");
+			GameEvents.onInputLocksModified.Remove(OnInputLocksModified);
 			FlightInputHandler.OnRawAxisInput -= ControlUpdate;
 		}
 

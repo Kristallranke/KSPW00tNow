@@ -37,6 +37,7 @@ namespace KSPW00tNow
 		public FlightCtrlState flightState;
 		public KerbalCtrlState kerbalState;
 		public SasControlMode sasControlMode;
+		public ControlTypes lockMask;
 
 		private static ControlManager instance = null;
 
@@ -68,23 +69,23 @@ namespace KSPW00tNow
 				foreach (var analog in keys) {
 					Key key = new Key((HidKey)analog.Item1);
 					float value = analog.Item2;
-					PrepareAxis(ref flightState.pitch, GameSettings.PITCH_DOWN, GameSettings.PITCH_UP, key, value);
-					PrepareAxis(ref flightState.roll, GameSettings.ROLL_LEFT, GameSettings.ROLL_RIGHT, key, value);
-					PrepareAxis(ref flightState.yaw, GameSettings.YAW_LEFT, GameSettings.YAW_RIGHT, key, value);
-					PrepareAxis(ref flightState.wheelSteer, GameSettings.WHEEL_STEER_LEFT, GameSettings.WHEEL_STEER_RIGHT, key, value);
-					PrepareAxis(ref flightState.Z, GameSettings.TRANSLATE_BACK, GameSettings.TRANSLATE_FWD, key, value);
-					PrepareAxis(ref flightState.Y, GameSettings.TRANSLATE_DOWN, GameSettings.TRANSLATE_UP, key, value);
-					PrepareAxis(ref flightState.X, GameSettings.TRANSLATE_LEFT, GameSettings.TRANSLATE_RIGHT, key, value);
-					PrepareAxis(ref flightState.mainThrottle, GameSettings.THROTTLE_DOWN, GameSettings.THROTTLE_UP, key, value);
-					PrepareAxis(ref flightState.wheelThrottle, GameSettings.WHEEL_THROTTLE_DOWN, GameSettings.WHEEL_THROTTLE_UP, key, value);
+					PrepareAxis(ref flightState.pitch, GameSettings.PITCH_DOWN, GameSettings.PITCH_UP, key, value, ControlTypes.PITCH);
+					PrepareAxis(ref flightState.roll, GameSettings.ROLL_LEFT, GameSettings.ROLL_RIGHT, key, value, ControlTypes.ROLL);
+					PrepareAxis(ref flightState.yaw, GameSettings.YAW_LEFT, GameSettings.YAW_RIGHT, key, value, ControlTypes.YAW);
+					PrepareAxis(ref flightState.wheelSteer, GameSettings.WHEEL_STEER_LEFT, GameSettings.WHEEL_STEER_RIGHT, key, value, ControlTypes.WHEEL_STEER);
+					PrepareAxis(ref flightState.Z, GameSettings.TRANSLATE_BACK, GameSettings.TRANSLATE_FWD, key, value, ControlTypes.RCS);
+					PrepareAxis(ref flightState.Y, GameSettings.TRANSLATE_DOWN, GameSettings.TRANSLATE_UP, key, value, ControlTypes.RCS);
+					PrepareAxis(ref flightState.X, GameSettings.TRANSLATE_LEFT, GameSettings.TRANSLATE_RIGHT, key, value, ControlTypes.RCS);
+					PrepareAxis(ref flightState.mainThrottle, GameSettings.THROTTLE_DOWN, GameSettings.THROTTLE_UP, key, value, ControlTypes.THROTTLE);
+					PrepareAxis(ref flightState.wheelThrottle, GameSettings.WHEEL_THROTTLE_DOWN, GameSettings.WHEEL_THROTTLE_UP, key, value, ControlTypes.WHEEL_THROTTLE);
 
-					PrepareAxis(ref kerbalState.forward, GameSettings.EVA_back, GameSettings.EVA_forward, key, value);
-					PrepareAxis(ref kerbalState.sideway, GameSettings.EVA_left, GameSettings.EVA_right, key, value);
-					PrepareAxis(ref kerbalState.yaw, GameSettings.EVA_yaw_left, GameSettings.EVA_yaw_right, key, value);
+					PrepareAxis(ref kerbalState.forward, GameSettings.EVA_back, GameSettings.EVA_forward, key, value, ControlTypes.EVA_INPUT);
+					PrepareAxis(ref kerbalState.sideway, GameSettings.EVA_left, GameSettings.EVA_right, key, value, ControlTypes.EVA_INPUT);
+					PrepareAxis(ref kerbalState.yaw, GameSettings.EVA_yaw_left, GameSettings.EVA_yaw_right, key, value, ControlTypes.YAW);
 
-					PrepareAxis(ref kerbalState.packZ, GameSettings.EVA_Pack_back, GameSettings.EVA_Pack_forward, key, value);
-					PrepareAxis(ref kerbalState.packY, GameSettings.EVA_Pack_down, GameSettings.EVA_Pack_up, key, value);
-					PrepareAxis(ref kerbalState.packX, GameSettings.EVA_Pack_left, GameSettings.EVA_Pack_right, key, value);
+					PrepareAxis(ref kerbalState.packZ, GameSettings.EVA_Pack_back, GameSettings.EVA_Pack_forward, key, value, ControlTypes.RCS);
+					PrepareAxis(ref kerbalState.packY, GameSettings.EVA_Pack_down, GameSettings.EVA_Pack_up, key, value, ControlTypes.RCS);
+					PrepareAxis(ref kerbalState.packX, GameSettings.EVA_Pack_left, GameSettings.EVA_Pack_right, key, value, ControlTypes.RCS);
 				}
 			} else {
 				if (!error) {
@@ -94,16 +95,15 @@ namespace KSPW00tNow
 			}
 		}
 
-		private bool PrepareAxis(ref float axis, KeyBinding negative, KeyBinding positive, Key key, float value)
+		private void PrepareAxis(ref float axis, KeyBinding negative, KeyBinding positive, Key key, float value, ControlTypes lockFlag)
 		{
-			if (key == negative.primary) {
+			if (((ulong)lockMask & (ulong)lockFlag) != 0) {
+				return;
+			} else if (key == negative.primary) {
 				axis -= value;
 			} else if (key == positive.primary) {
 				axis += value;
-			} else {
-				return false;
 			}
-			return true;
 		}
 
 		private void DumpTypeInfo(System.Type type)

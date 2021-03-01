@@ -4,8 +4,10 @@ This plugin reads the analog values from the keyboard and applies those instead 
 
 ## Features
 - Automatically binds to the primary keybindings
-- Flight controls (rotate, translate, thrust)
-- SAS override
+- Flight controls (rotate, translate, thrust, steer)
+- SAS override (absolute)
+- Precision mode with reduced input
+- Precision mode applied to thrust
 - EVA: variable ladder climb speed
 - EVA: variable walk and run speed (CameraFrameMode* on)
 - EVA: 360° movement (CameraFrameMode* off)

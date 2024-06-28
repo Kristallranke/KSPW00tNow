@@ -164,7 +164,7 @@ namespace WootingAnalogSDKNET
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate void RawDeviceEventCb(DeviceEventType eventType, IntPtr deviceInfo);
 
-        private const string SdkLib = "wooting_analog_wrapper";
+        private const string SdkLib = "wooting_analog_wrapper.bin";
 
         [DllImport(SdkLib, EntryPoint = "wooting_analog_initialise")]
         private static extern int initialise();

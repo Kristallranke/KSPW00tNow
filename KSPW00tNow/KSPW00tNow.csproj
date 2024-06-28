@@ -64,7 +64,7 @@
     <Compile Include="Wooting Analog SDK\WootingAnalogSDK.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Wooting Analog SDK\wooting_analog_wrapper.dll" />
+    <None Include="Wooting Analog SDK\wooting_analog_wrapper.bin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -73,7 +73,7 @@
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(OutDir)KSPW00tNow.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
     <Copy SourceFiles="$(OutDir)0Harmony.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
-    <Copy SourceFiles="$(ProjectDir)Wooting Analog SDK\wooting_analog_wrapper.dll" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
+    <Copy SourceFiles="$(ProjectDir)Wooting Analog SDK\wooting_analog_wrapper.bin" UseHardlinksIfPossible="true" DestinationFolder="$(SolutionDir)package\GameData\KSPW00tNow\Plugins" />
     <ZipDirectory DestinationFile="$(SolutionDir)package\KSPW00tNow.zip" Overwrite="true" SourceDirectory="$(SolutionDir)package\GameData" />
   </Target>
   <PropertyGroup>

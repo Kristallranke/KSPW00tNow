@@ -26,7 +26,7 @@ Extract the contents of package\KSPW00tNow.zip into the GameData directory of th
 The file structure should look as following:\
 \<KSPRootDir\>\GameData\KSPW00tNow\Plugins\0Harmony.dll\
 \<KSPRootDir\>\GameData\KSPW00tNow\Plugins\KSPW00tNow.dll\
-\<KSPRootDir\>\GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.dll
+\<KSPRootDir\>\GameData\KSPW00tNow\Plugins\wooting_analog_wrapper.bin
 
 ## Usage
 No manual setup is required.

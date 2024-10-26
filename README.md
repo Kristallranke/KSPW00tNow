@@ -20,6 +20,9 @@ This plugin reads the analog values from the keyboard and applies those instead 
 2. Choose configuration _Release_
 3. Build the solution
 
+## Prerequisites
+This plugin requires the [Wooting Analog SDK](https://github.com/WootingKb/wooting-analog-sdk/releases) to be installed. However, that doesn't mean it can only be used with Wooting keyboards, as there are [SDK plugins for other analog keyboards](https://github.com/AnalogSense/universal-analog-plugin).
+
 ## Installation
 Extract the contents of package\KSPW00tNow.zip into the GameData directory of the Kerbal Space Program install folder.
 
